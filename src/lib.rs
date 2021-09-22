@@ -55,6 +55,32 @@ impl Befehl{
     }
 }
 
-pub fn interp(befehl: Befehl){
+pub fn interp(befehl: Befehl) {
+    //TODO Fehlermeldungen{
 
+    let high_kalender = "kalender";
+    let high_geld = "geld";
+    let high_bewohner = "bewoohner";
+    let high_aufgaben = "kalender";
+
+    match befehl.high_level.as_str() {
+        high_kalender => interp_kalender(befehl.low_level),
+        high_kgeld => interp_geld(befehl.low_level),
+        high_bewohner => interp_bewohner(befehl.low_level),
+        high_aufgaben => interp_aufgaben(befehl.low_level),
+        // TODO: ERR
+    }
+}
+
+fn interp_kalender(low_level: String) {
+    println!("Kalender")
+}
+fn interp_geld(low_level: String) {
+    println!("Geld")
+}
+fn interp_bewohner(low_level: String) {
+    println!("Bewohner")
+}
+fn interp_aufgaben(low_level: String) {
+    println!("Aufgaben")
 }

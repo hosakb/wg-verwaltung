@@ -15,6 +15,4 @@ fn main() {
 
     wg_verwaltung::interp(befehl);
 
-    
-
 }
