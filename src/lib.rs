@@ -1,5 +1,6 @@
 use std::env;
 use std::error::Error;
+use std::io;
 
 pub struct Bewohner{
 
@@ -28,7 +29,7 @@ impl Bewohner{
 
 pub struct Befehl{
     pub high_level: String,
-    pub low_level: String,
+    pub low_level: Option<String>,
 }
 
 impl Befehl{
@@ -44,18 +45,19 @@ impl Befehl{
 
         let low_level = match args.next() {
             Some(arg) => arg,
-            None => return Err("Did not find low level command"),
+            None => return Ok(Befehl {high_level,
+            low_level: None}),
         };
 
 
         Ok(Befehl {
             high_level,
-            low_level,
+            low_level: Some(low_level),
         })
     }
 }
 
-pub fn interp(befehl: Befehl) {
+/*pub fn interp(befehl: Befehl) {
     //TODO Fehlermeldungen{
 
     match befehl.high_level.as_str() {
@@ -63,16 +65,52 @@ pub fn interp(befehl: Befehl) {
         "geld" => interp_geld(befehl.low_level),
         "bewohner" => interp_bewohner(befehl.low_level),
         "aufgaben" => interp_aufgaben(befehl.low_level),
+        "interface" => present_interface(),
         _ => print!("Not covered"),  // TODO: ERR
+    }
+}*/
+
+pub fn present_interface(){
+    println!("Willkommen zu WG-Verwaltung. Der professionellen WG-Verwaltungssoftware, welche es dir leicht macht, deine WG zu verwalten.");
+    println!("Was möchtest du tun?");
+    println!("\tkalender\n\tgeld\n\tbewohner\n\taufgaben\n\tbeenden");
+
+    let mut str = String::new(); 
+    loop{
+        str.clear();
+        io::stdin().read_line( &mut str).expect("You must put in a command");
+        
+        match str.trim() {
+            "beenden" => break,
+            "kalender" => interp_kalender(),
+            "geld" => interp_geld(),
+            _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
+        }
     }
 }
 
-fn interp_kalender(low_level: String) {
-    println!("Kalender")
+fn interp_geld(){
+    println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
+    println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
+
+    let mut str = String::new(); 
+    loop{
+        str.clear();
+        io::stdin().read_line( &mut str).expect("You must put in a command");
+        
+        match str.trim() {
+            "zurück" => break,
+            "kalender" => interp_kalender(),
+            "geld" => interp_geld(),
+            _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
+        }
+    }
 }
-fn interp_geld(low_level: String) {
-    println!("Geld")
+
+fn interp_kalender(){
+
 }
+
 fn interp_bewohner(low_level: String) {
     println!("Bewohner")
 }

@@ -1,0 +1,7 @@
+Der Kalender sollte ganz ähnlich aufgebaut sein, wie jeder andere auf dem Handy. Alles andere verwirrt die Leute nur. Und auch die Erstellung von Aufgaben sollte sehr ähnlich der Erstellung von Events in einem Kalender sein.
+Es gibt einen Screen, in dem alle anstehenden Aufgaben stehen und die jeweils verantwortliche Person. Wenn man draufklickt, kann man als die Aufgabe entweder erledigen oder für jemand anderen erledigen. Außerdem sieht man, wer die Aufgabe erstellt hat und ein paar mehr Infos, wie die Wiederkehr etc.
+
+Mit den Moneten sollte das Ganze so sein, dass man sich entweder eine Art Leaderboard, die Differenz zum WG-Mittel oder die Zahlungen von den einzelnen Leuten, an die jeweils anderen Anzeigen lassen kann. Zudem sieht man hier alle Aufgaben, die etwas mit Geld zutun haben. Das funktioniert ähnlich, wie mit den anderen. Hier kann man auch proaktiv von jemandem eine Zahlung Verlangen, weil man etwas für die Person gekauft hat. Da kann man auch gleich reintun, für wen das war.
+
+
+
