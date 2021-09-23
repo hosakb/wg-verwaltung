@@ -71,12 +71,11 @@ impl Befehl{
 }*/
 
 pub fn present_interface(){
-    println!("Willkommen zu WG-Verwaltung. Der professionellen WG-Verwaltungssoftware, welche es dir leicht macht, deine WG zu verwalten.");
-    println!("Was möchtest du tun?");
-    println!("\tkalender\n\tgeld\n\tbewohner\n\taufgaben\n\tbeenden");
-
     let mut str = String::new(); 
     loop{
+        println!("Willkommen zu WG-Verwaltung. Der professionellen WG-Verwaltungssoftware, welche es dir leicht macht, deine WG zu verwalten.");
+        println!("Was möchtest du tun?");
+        println!("\tkalender\n\tgeld\n\tbewohner\n\taufgaben\n\tbeenden");
         str.clear();
         io::stdin().read_line( &mut str).expect("You must put in a command");
         
@@ -90,11 +89,12 @@ pub fn present_interface(){
 }
 
 fn interp_geld(){
-    println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
-    println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
 
     let mut str = String::new(); 
     loop{
+        println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
+        println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
+        
         str.clear();
         io::stdin().read_line( &mut str).expect("You must put in a command");
         
