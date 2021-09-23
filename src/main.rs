@@ -9,12 +9,4 @@ fn main() {
 
     wg_verwaltung::present_interface();
 
-
-/*    let befehl = Befehl::new(env::args()).unwrap_or_else(|err|{
-        eprintln!("Problem parsing arguments: {}", err);
-        process::exit(1);
-    });*/
-
- //   wg_verwaltung::interp(befehl);
-
 }

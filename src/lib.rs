@@ -57,18 +57,7 @@ impl Befehl{
     }
 }
 
-/*pub fn interp(befehl: Befehl) {
-    //TODO Fehlermeldungen{
 
-    match befehl.high_level.as_str() {
-        "kalender" => interp_kalender(befehl.low_level),
-        "geld" => interp_geld(befehl.low_level),
-        "bewohner" => interp_bewohner(befehl.low_level),
-        "aufgaben" => interp_aufgaben(befehl.low_level),
-        "interface" => present_interface(),
-        _ => print!("Not covered"),  // TODO: ERR
-    }
-}*/
 
 pub fn present_interface(){
     let mut str = String::new(); 
@@ -94,13 +83,13 @@ fn interp_geld(){
     loop{
         println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
         println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
-        
+
         str.clear();
         io::stdin().read_line( &mut str).expect("You must put in a command");
         
         match str.trim() {
             "zurück" => break,
-            "kalender" => interp_kalender(),
+            "generelle Ausgabe" => interp_kalender(),
             "geld" => interp_geld(),
             _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
         }
