@@ -1,9 +1,10 @@
+mod geld;
+
 use std::env;
 use std::error::Error;
 use std::io;
 
 pub struct Bewohner{
-
     pub id: i32,
     pub name: String,
     // Gebutstag: DATE
@@ -57,8 +58,6 @@ impl Befehl{
     }
 }
 
-
-
 pub fn present_interface(){
     let mut str = String::new(); 
     loop{
@@ -89,17 +88,12 @@ fn interp_geld(){
         
         match str.trim() {
             "zurück" => break,
-            "generelle Ausgabe" => interp_kalender(),
+            "generelle Ausgabe" => geld::generelle_ausgabe(),
             "geld" => interp_geld(),
             _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
         }
     }
 }
-
-fn generelle_ausgabe(mut ghj:[i32]){
-
-}
-
 
 
 fn interp_kalender(){
