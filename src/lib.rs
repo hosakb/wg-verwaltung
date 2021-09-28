@@ -79,7 +79,7 @@ pub fn present_interface(){
 
 fn interp_geld(){
 
-    let mut str = String::new(); 
+    let mut str = String::new();
     loop{
         println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
         println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
@@ -95,6 +95,12 @@ fn interp_geld(){
         }
     }
 }
+
+fn generelle_ausgabe(mut ghj:[i32]){
+
+}
+
+
 
 fn interp_kalender(){
 
