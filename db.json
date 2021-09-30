@@ -1,0 +1,18 @@
+[
+    {
+        "id": 0,
+        "name": "Ben",
+        "bday": "1998-02-10",
+        "admin": true,
+        "username": "hosakb",
+        "passwort": "1234"
+    },
+    {
+        "id": 1,
+        "name": "Tobi",
+        "bday": "1995-03-01",
+        "admin": false,
+        "username": "tobi",
+        "passwort": "4321"
+    }
+]
