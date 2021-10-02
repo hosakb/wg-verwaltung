@@ -5,7 +5,7 @@
         "bday": "1998-02-10",
         "admin": true,
         "username": "hosakb",
-        "passwort": "1234"
+        "passwort": "$argon2i$v=19$m=4096,t=3,p=1$V43VlUIfE5+CmQk9smoYjnqCbdEVo4/fFnbzfhWE3E4$vr6PWVPVfN3CnFr6j9Nc5wgW0JeujtX2PWSpUMOvLbY"
     },
     {
         "id": 1,
@@ -13,6 +13,6 @@
         "bday": "1995-03-01",
         "admin": false,
         "username": "tobi",
-        "passwort": "4321"
+        "passwort": "$argon2i$v=19$m=4096,t=3,p=1$qOqY+8HbCE9FjmCM/sgCOOMi/lJF/z1fpQokJhuYxu0$tnW8GvXeSU3yopTFEwOqamDXVXTL3Mqe8izVL8iwZ24"
     }
 ]

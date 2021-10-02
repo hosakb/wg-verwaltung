@@ -1,11 +1,11 @@
 
 extern crate chrono;
 
-use chrono::{NaiveDate, ParseError};
-use std::{env, io};
+use chrono::{NaiveDate};
+use std::io;
 
 use thiserror::Error;
-use anyhow::{Context, Result};
+use anyhow::Result;
 
 #[derive(Error, Debug)]
 pub enum AufgabenError {
@@ -107,14 +107,14 @@ fn aufgabe_erstellen() -> Result<Aufgabe, AufgabenError> {
     ))
 } */
 
+/*
 #[cfg(test)]
 mod tests {
-    use core::panic;
     use std::str::FromStr;
 
     use super::*;
 
-    #[test]
+     #[test]
     fn test_aufgabe_new() {
         let aufgabe = Aufgabe {
             name: String::from("name"),
@@ -143,6 +143,4 @@ mod tests {
        assert!(aufgabe.beendet)
     }
 
-}
-
-
+} */
