@@ -30,7 +30,7 @@ impl Ausgabe{
 }
 
 
-pub fn generelle_ausgabe(){
+/* pub fn generelle_ausgabe(){
     let mut str:String =String::new();
 
     let mut verwaltung:GeldVerwaltung = GeldVerwaltung::new();
@@ -45,5 +45,9 @@ pub fn generelle_ausgabe(){
 
     str.clear();
     io::stdin().read_line( &mut str).expect("You must put in a command");
+
+} */
+
+pub fn finanzen_options(bewohner: &Bewohner){
 
 }

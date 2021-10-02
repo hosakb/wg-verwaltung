@@ -29,8 +29,12 @@ fn check_username<'a>(db: &'a Vec<Bewohner>) -> Option<&'a Bewohner> {
     let mut username = String::from("");
 
     loop {
+        username.clear();
+
         print!("Username: ");
+        io::Write::flush(&mut io::stdout()).expect("flush failed!");
         io::stdin().read_line(&mut username).unwrap();
+       
         if username.trim().is_empty() {
             return None;
         }
@@ -38,7 +42,7 @@ fn check_username<'a>(db: &'a Vec<Bewohner>) -> Option<&'a Bewohner> {
         let bewohner = db.into_iter().find(|b| b.username.eq(username.trim()));
         match bewohner {
             Some(b) => return Some(b),
-            None => eprintln!("Username existiert nicht!"),
+            None => eprintln!("---Username existiert nicht!---"),
         }
     }
 }
@@ -47,15 +51,19 @@ fn check_password<'a>(bewohner: &'a Bewohner) -> Option<&'a Bewohner> {
     let mut password = String::from("");
 
     loop {
+        password.clear();
+
         print!("Passwort: ");
+        io::Write::flush(&mut io::stdout()).expect("flush failed!");
         io::stdin().read_line(&mut password).unwrap();
        
         if verify(bewohner.passwort.as_str(), password.trim().as_bytes()) {
+            println!("Login erfolgreich!");
             return Some(bewohner);
         } else if password.trim().is_empty() {
             return None;
         }
-        println!("Passwort ist falsch!");
+        println!("---Passwort ist falsch!---");
     }
 }
 

@@ -1,20 +1,25 @@
 mod aufgabe;
 mod db;
 mod login;
+mod kalender;
+mod einkauf;
+mod geld;
+mod bewohner;
+mod putzplan;
 
 extern crate chrono;
 
 use chrono::{NaiveDate, ParseError};
 use login::login_user;
 use core::panic;
-use std::{clone, collections::HashMap, env, io};
+use std::{clone, collections::HashMap, env, io, option};
 
 use anyhow::{Context, Result};
 use thiserror::Error;
 
 use crate::db::Bewohner;
 
-pub fn app() {
+pub fn run() {
     let db = db::read_db();
     let bewohner;
     
@@ -23,20 +28,57 @@ pub fn app() {
         None => return,
     }
 
-    if bewohner.admin {
-        admin_functions();
-    } else {
-        standard_function();
+    options(bewohner);
+}
+
+fn options(bewohner: &Bewohner){
+    let mut option = String::from("");
+    let admin = bewohner.admin;
+
+    println!("Hallo {}, was möchtest du machen?", bewohner.name);
+
+    loop {
+        option.clear();
+        print_options(bewohner);
+        io::stdin().read_line(&mut option).expect("Input could not be read!");
+
+        let o = option.as_str();
+        match o{
+            "1" => kalender::kalender_options(bewohner),
+            "2" => einkauf::einkaufsliste_options(bewohner),
+            "3" => putzplan::putzplan_options(bewohner),
+            "4" => geld::finanzen_options(bewohner),
+            "5" => aufgabe::aufgaben_options(bewohner),
+            "6" => return,
+            _ => {
+                if admin {
+                    match o {
+                        "7" => bewohner::bewohnerveraltung_options(),
+                        _ => eprint!("---Option nicht verfügbar---"),
+                    }
+                } else {
+                    eprint!("---Option nicht verfügbar---")
+                }
+            }
+        }
     }
 }
 
-fn admin_functions(){
-    
+fn print_options(bewohner: &Bewohner){
+    println!("
+    (1) Kalender\n
+    (2) Einkaufsliste\n
+    (3) Putzplan\n
+    (4) Finanzen\n
+    (5) Aufgabenverteilung\n
+    (6) Ausloggen\n
+    ");
+
+    if bewohner.admin {
+        println!("---Adminfunktionen---\n(7) Bewohnerverwaltung");
+    }
 }
 
-fn standard_function(){
-    
-}
 
 fn interp_geld() {
     let mut str = String::new();

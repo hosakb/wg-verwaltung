@@ -1,11 +1,8 @@
-
-extern crate chrono;
-
 use chrono::{NaiveDate};
 use std::io;
-
 use thiserror::Error;
 use anyhow::Result;
+use crate::db::Bewohner;
 
 #[derive(Error, Debug)]
 pub enum AufgabenError {
@@ -78,6 +75,10 @@ fn aufgabe_erstellen() -> Result<Aufgabe, AufgabenError> {
     ))
 }
 
+pub fn putzplan_options(){
+
+}
+
 /* fn aufgabe_erstellen() -> Result<Aufgabe, anyhow::Error> {
     let mut name = String::new();
     let mut beschreibung = String::new();
@@ -106,6 +107,10 @@ fn aufgabe_erstellen() -> Result<Aufgabe, AufgabenError> {
         false,
     ))
 } */
+
+pub fn aufgaben_options(bewohner: &Bewohner){
+
+}
 
 /*
 #[cfg(test)]
