@@ -49,7 +49,7 @@ fn check_password<'a>(bewohner: &'a Bewohner) -> Option<&'a Bewohner> {
     loop {
         print!("Passwort: ");
         io::stdin().read_line(&mut password).unwrap();
-        print!("Hash: {}\nInput: {}", bewohner.passwort, password);
+       
         if verify(bewohner.passwort.as_str(), password.trim().as_bytes()) {
             return Some(bewohner);
         } else if password.trim().is_empty() {
