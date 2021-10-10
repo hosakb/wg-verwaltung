@@ -4,7 +4,7 @@ mod login;
 mod kalender;
 mod einkauf;
 mod geld;
-mod bewohner;
+mod bewohner_verwaltung;
 mod putzplan;
 
 extern crate chrono;
@@ -31,7 +31,7 @@ pub fn run() {
     options(bewohner);
 }
 
-fn options(bewohner: &Bewohner){
+fn options(bewohner: Bewohner){
     let mut option = String::from("");
     let admin = bewohner.admin;
 
@@ -39,21 +39,21 @@ fn options(bewohner: &Bewohner){
 
     loop {
         option.clear();
-        print_options(bewohner);
+        print_options(&bewohner);
         io::stdin().read_line(&mut option).expect("Input could not be read!");
 
         let o = option.as_str();
         match o{
-            "1" => kalender::kalender_options(bewohner),
-            "2" => einkauf::einkaufsliste_options(bewohner),
-            "3" => putzplan::putzplan_options(bewohner),
-            "4" => geld::finanzen_options(bewohner),
-            "5" => aufgabe::aufgaben_options(bewohner),
+            "1" => kalender::kalender_options(&bewohner),
+            "2" => einkauf::einkaufsliste_options(&bewohner),
+            "3" => putzplan::putzplan_options(&bewohner),
+            "4" => geld::finanzen_options(&bewohner),
+            "5" => aufgabe::aufgaben_options(&bewohner),
             "6" => return,
             _ => {
                 if admin {
                     match o {
-                        "7" => bewohner::bewohnerveraltung_options(),
+                        "7" => bewohner_verwaltung::bewohnerveraltung_options(),
                         _ => eprint!("---Option nicht verfügbar---"),
                     }
                 } else {
@@ -104,22 +104,4 @@ fn interp_kalender() {}
 
 fn interp_bewohner() {
     println!("Bewohner")
-}
-fn interp_aufgaben() {
-    loop {
-        let mut str = format!("Wilkommen bei der AUfgabenverteilung\nDie folgenden Funbktionen stehen dir 
-        heute zur verfügung:\n\n\t(1) Neue Aufgabe erstellen\n\t(2) Aufgabe beenden\n\t(3) Aufgabenübersicht");
-        print!("{}", &str);
-        io::stdin()
-            .read_line(&mut str)
-            .expect("Yout must enter a command!");
-
-        // match str.trim() {
-        //     "zurück" => break,
-        //     "1" => aufgabe_erstellen(),
-        //     "2" => aufgabe_beenden(),
-        //     "3" => aufgabe_anzeigen(),
-        //     _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
-        // }
-    }
 }

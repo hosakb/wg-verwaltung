@@ -3,6 +3,7 @@ use rand::Rng;
 use std::io;
 
 use crate::db::Bewohner;
+use crate::db;
 
 fn hash(pwd: &[u8]) -> String {
     let salt = rand::thread_rng().gen::<[u8; 32]>();
@@ -14,7 +15,7 @@ fn verify(hash: &str, pwd: &[u8]) -> bool {
     argon2::verify_encoded(hash, pwd).unwrap_or(false)
 }
 
-pub fn login_user<'a>(db: &'a Vec<Bewohner>) -> Option<&'a Bewohner> {
+pub fn login_user (db: &Vec<Bewohner>) -> Option<Bewohner> {
     println!("Willkommen zu Skittles. Der professionellen WG-Verwaltungssoftware, welche es dir leicht macht, deine WG zu verwalten.");
     println!("--Login--");
 
@@ -25,29 +26,31 @@ pub fn login_user<'a>(db: &'a Vec<Bewohner>) -> Option<&'a Bewohner> {
     }
 }
 
-fn check_username<'a>(db: &'a Vec<Bewohner>) -> Option<&'a Bewohner> {
+fn check_username<'a>(db: &Vec<Bewohner>) -> Option<Bewohner> {
     let mut username = String::from("");
+    
 
-    loop {
+    let bewohner = loop {
         username.clear();
 
         print!("Username: ");
         io::Write::flush(&mut io::stdout()).expect("flush failed!");
         io::stdin().read_line(&mut username).unwrap();
-       
+
         if username.trim().is_empty() {
             return None;
         }
 
-        let bewohner = db.into_iter().find(|b| b.username.eq(username.trim()));
-        match bewohner {
-            Some(b) => return Some(b),
+        match  db::check_username_exists(&username){
+            Some(b) =>  break Some(b),
             None => eprintln!("---Username existiert nicht!---"),
         }
-    }
+    };
+
+    bewohner
 }
 
-fn check_password<'a>(bewohner: &'a Bewohner) -> Option<&'a Bewohner> {
+fn check_password(bewohner: Bewohner) -> Option<Bewohner> {
     let mut password = String::from("");
 
     loop {
@@ -123,13 +126,13 @@ mod test {
     fn test_check_password() {
         
         let v = create_user();
-        assert!(check_password(&v).is_some());
+        assert!(check_password(v).is_some());
     }
 
     #[test]
     fn test_check_password_empty() {
         
         let v = create_user();
-        assert!(check_password(&v).is_none());
+        assert!(check_password(v).is_none());
     }
 }

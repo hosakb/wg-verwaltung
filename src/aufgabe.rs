@@ -79,6 +79,25 @@ pub fn putzplan_options(){
 
 }
 
+fn interp_aufgaben() {
+    loop {
+        let mut str = format!("Wilkommen bei der AUfgabenverteilung\nDie folgenden Funbktionen stehen dir 
+        heute zur verfügung:\n\n\t(1) Neue Aufgabe erstellen\n\t(2) Aufgabe beenden\n\t(3) Aufgabenübersicht");
+        print!("{}", &str);
+        io::stdin()
+            .read_line(&mut str)
+            .expect("Yout must enter a command!");
+
+        // match str.trim() {
+        //     "zurück" => break,
+        //     "1" => aufgabe_erstellen(),
+        //     "2" => aufgabe_beenden(),
+        //     "3" => aufgabe_anzeigen(),
+        //     _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
+        // }
+    }
+}
+
 /* fn aufgabe_erstellen() -> Result<Aufgabe, anyhow::Error> {
     let mut name = String::new();
     let mut beschreibung = String::new();

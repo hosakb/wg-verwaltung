@@ -16,14 +16,14 @@ pub struct Bewohner {
 }
 
 impl Bewohner {
-    pub fn new(id: i32, name: String, bday: NaiveDate, admin: bool, username: String, passwort: String) -> Bewohner {
+    pub fn new(name: String, bday: String, admin: bool, username: String) -> Bewohner {
         Bewohner {
-            id: id,
+            id: get_next_id(),
             name: name,
-            bday: bday,
+            bday: NaiveDate::parse_from_str( bday.as_str().trim(), "%Y-%m-%d").unwrap(),
             admin: admin,
             username: username,
-            passwort: passwort,
+            passwort: String::from("1234"),
         }
     }
 }
@@ -54,4 +54,19 @@ pub fn read_db() -> Vec<Bewohner>{
        }
     }).collect();
     bewohner
+}
+
+pub fn write_db(){
+    serde_json::
+}
+
+pub fn check_username_exists(username: &str) -> Option<Bewohner> {
+    read_db().into_iter().find(|b| b.username.eq(username.trim()))
+}
+
+fn get_next_id() -> i32{
+    match read_db().last() {
+        Some(n) => return n.id + 1,
+        None => return 1,
+    }
 }
