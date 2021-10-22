@@ -1,17 +1,17 @@
 mod aufgabe;
+mod bewohner;
 mod db;
-mod login;
-mod kalender;
 mod einkauf;
 mod geld;
-mod bewohner;
+mod kalender;
+mod login;
 mod putzplan;
 
 extern crate chrono;
 
 use chrono::{NaiveDate, ParseError};
-use login::login_user;
 use core::panic;
+use login::login_user;
 use std::{clone, collections::HashMap, env, io, option};
 
 use anyhow::{Context, Result};
@@ -19,19 +19,25 @@ use thiserror::Error;
 
 use crate::db::Bewohner;
 
-pub fn run() {
-    let db = db::read_db();
-    let bewohner;
+pub fn run(){
     
-    match login::login_user(&db) {
-        Some(b) => bewohner = b,
-        None => return,
-    }
+    let db = db::read_bewohner().unwrap_or_else(|err| panic!("Something happened while reading the Datatabse:\n{}", err));
 
+    let db = match db {
+        Some(v) => v,
+        None => todo!(),                 //TODO: implement or panic
+    };
+
+    let bewohner_option = login::login_user(&db).unwrap_or_else(|err| panic!("Something happened during login:\n{}", err));
+
+    let bewohner = match bewohner_option{
+        Some(b) => b,
+        None => return,
+    };
     options(bewohner);
 }
 
-fn options(bewohner: &Bewohner){
+fn options(bewohner: &Bewohner) {
     let mut option = String::from("");
     let admin = bewohner.admin;
 
@@ -40,10 +46,12 @@ fn options(bewohner: &Bewohner){
     loop {
         option.clear();
         print_options(bewohner);
-        io::stdin().read_line(&mut option).expect("Input could not be read!");
+        io::stdin()
+            .read_line(&mut option)
+            .expect("Input could not be read!");
 
         let o = option.as_str();
-        match o{
+        match o {
             "1" => kalender::kalender_options(bewohner),
             "2" => einkauf::einkaufsliste_options(bewohner),
             "3" => putzplan::putzplan_options(bewohner),
@@ -64,21 +72,22 @@ fn options(bewohner: &Bewohner){
     }
 }
 
-fn print_options(bewohner: &Bewohner){
-    println!("
+fn print_options(bewohner: &Bewohner) {
+    println!(
+        "
     (1) Kalender\n
     (2) Einkaufsliste\n
     (3) Putzplan\n
     (4) Finanzen\n
     (5) Aufgabenverteilung\n
     (6) Ausloggen\n
-    ");
+    "
+    );
 
     if bewohner.admin {
         println!("---Adminfunktionen---\n(7) Bewohnerverwaltung");
     }
 }
-
 
 fn interp_geld() {
     let mut str = String::new();
