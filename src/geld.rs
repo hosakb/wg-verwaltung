@@ -1,4 +1,4 @@
-use crate::Bewohner;
+use crate::db::bewohner::Bewohner;
 use std::io;
 
 pub struct GeldVerwaltung{
@@ -50,4 +50,24 @@ impl Ausgabe{
 
 pub fn finanzen_options(bewohner: &Bewohner){
 
+}
+
+fn interp_geld() {
+    let mut str = String::new();
+    loop {
+        println!("Du hast gewählt, dass du etwas mit Geld tun möchtest. Was möchtest du tun?");
+        println!("\tzurück\n\tzeige Nutzer an\n\tfüge generelle Ausgabe hinzu");
+
+        str.clear();
+        io::stdin()
+            .read_line(&mut str)
+            .expect("You must put in a command");
+
+        match str.trim() {
+            "zurück" => break,
+         //   "generelle Ausgabe" => geld::generelle_ausgabe(),
+            "geld" => interp_geld(),
+            _ => println!("Dieser Befehl existiert nicht. Bitte überlege noch einmal, welche Entscheidungen dich an diesen Punkt gebracht haben."),
+        }
+    }
 }

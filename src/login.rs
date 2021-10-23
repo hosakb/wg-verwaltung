@@ -1,9 +1,10 @@
 use argon2::{self, Config};
 use rand::Rng;
 use std::io;
-use std::io::Error;
+use chrono::NaiveDate;
 
-use crate::db::Bewohner;
+use crate::db;
+use crate::db::bewohner::Bewohner;
 
 fn hash(pwd: &[u8]) -> String {
     let salt = rand::thread_rng().gen::<[u8; 32]>();
@@ -72,6 +73,64 @@ fn check_password<'a>(bewohner: &'a Bewohner) -> Result<Option<&'a Bewohner>, io
     }
 }
 
+pub fn erster_bewohner() -> Result<Vec<Bewohner>, Box<dyn std::error::Error>>{ // Safer data input
+    
+    println!("Wilkommen...");
+
+    println!("Wie heißt du?");
+    let mut name = String::new();
+    io::stdin()
+        .read_line(&mut name)?;
+
+  
+        
+    println!("Nutzername");
+    let mut nutzername = String::new();
+    io::stdin()
+        .read_line(&mut nutzername)?;
+        
+    println!("Passwort");    
+    let mut passwort = String::new();
+    io::stdin()
+        .read_line(&mut passwort)?;
+    let passwort = hash(passwort.as_bytes());
+    
+    
+    
+    let mut tag = String::new(); // Corner cases
+    let mut monat = String::new();
+    let mut jahr = String::new();
+
+    println!("Geburtstag");
+
+    println!("Tag");
+    io::stdin()
+        .read_line(&mut tag)?;
+    
+    let tag: u32 = tag.trim().parse().unwrap(); //unwrap
+
+    println!("Monat");
+    io::stdin()
+        .read_line(&mut monat)?;
+
+    let monat: u32 = monat.trim().parse().unwrap(); //unwrap
+
+
+    println!("Jahr");
+    io::stdin()
+        .read_line(&mut jahr)?;
+
+    let jahr: i32 = jahr.trim().parse().unwrap(); //unwrap
+
+
+    let bd = NaiveDate::from_ymd(jahr, monat, tag);
+
+    let bewohner = db::bewohner::create_bewohner(name.trim().to_string(), nutzername.trim().to_string(), passwort.trim().to_string(), true, bd)?;
+
+    Ok(vec![bewohner])
+    
+}
+
 #[cfg(test)]
 mod test {
 
@@ -134,5 +193,11 @@ mod test {
         let user = create_user();
         let res = check_password(&user).unwrap();
         assert!(res.is_none());
+    }
+
+    #[test]
+    fn erster_bewohner_erstellt() {
+        let bewohner = erster_bewohner().unwrap();
+        assert!(!bewohner.is_empty())
     }
 }

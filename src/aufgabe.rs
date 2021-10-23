@@ -2,7 +2,7 @@ use chrono::{NaiveDate};
 use std::io;
 use thiserror::Error;
 use anyhow::Result;
-use crate::db::Bewohner;
+use crate::db::bewohner::Bewohner;
 
 #[derive(Error, Debug)]
 pub enum AufgabenError {
