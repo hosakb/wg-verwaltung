@@ -1,5 +1,9 @@
 mod geld;
 mod login;
+mod aufgabe;
+mod einkauf;
+mod kalender;
+mod putzplan;
 
 use crate::model::bewohner::{self, Bewohner};
 use crate::view;

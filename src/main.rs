@@ -2,6 +2,9 @@ mod controller;
 mod model;
 mod view;
 
-fn main() {
-    controller::run();
+use anyhow::Result;
+
+fn main() -> Result<()>{
+    controller::run()?;
+    Ok(())
 }
