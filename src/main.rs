@@ -1,4 +1,7 @@
+mod controller;
+mod model;
+mod view;
 
 fn main() {
-    wg_verwaltung::run();
+    controller::run();
 }
