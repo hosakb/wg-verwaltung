@@ -4,7 +4,7 @@ use rand::Rng;
 use std::io;
 use anyhow::Result;
 
-use crate::model::bewohner::{self, Bewohner};
+use crate::model::{self, models::Bewohner};
 use crate::view;
 
 fn hash(pwd: &[u8]) -> String {
@@ -44,7 +44,7 @@ fn check_username<'a>(bewohner_db: &'a Vec<Bewohner>) -> Result<Option<&'a Bewoh
 
         let bewohner = bewohner_db
             .into_iter()
-            .find(|b| b.username.eq(username.trim()));
+            .find(|b| b.nutzername.eq(username.trim()));
 
         match bewohner {
             Some(b) => return Ok(Some(b)),
@@ -115,7 +115,7 @@ pub fn erster_bewohner() -> Result<Vec<Bewohner>> {
 
     let bd = NaiveDate::from_ymd(jahr, monat, tag);
 
-    let bewohner = bewohner::create_bewohner(
+    let bewohner = model::create_bewohner(
         name.trim().to_string(),
         nutzername.trim().to_string(),
         passwort.trim().to_string(),
@@ -138,9 +138,9 @@ mod test {
             id: 0,
             name: String::from("Ben"),
             admin: true,
-            username: String::from("hosakb"),
+            nutzername: String::from("hosakb"),
             passwort: String::from("$argon2i$v=19$m=4096,t=3,p=1$V43VlUIfE5+CmQk9smoYjnqCbdEVo4/fFnbzfhWE3E4$vr6PWVPVfN3CnFr6j9Nc5wgW0JeujtX2PWSpUMOvLbY"),
-            birthday: NaiveDate::from_ymd(1998, 2, 10),
+            geburtstag_id: NaiveDate::from_ymd(1998, 2, 10),
         }
     }
 

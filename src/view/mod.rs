@@ -55,7 +55,7 @@ pub mod login{
 }
 
 pub mod menu{
-    use crate::model::bewohner::Bewohner;
+    use crate::model::models::Bewohner;
 
     pub fn ask_options(bewohner: &Bewohner){
         println!("Hallo {}, was möchtest du machen?", bewohner.name);

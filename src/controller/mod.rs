@@ -5,13 +5,14 @@ mod einkauf;
 mod kalender;
 mod putzplan;
 
-use crate::model::bewohner::{self, Bewohner};
+use crate::model::{self, models::Bewohner};
 use crate::view;
+
 use std::io;
 use anyhow::{Result, Context};
 
 pub fn run() -> Result<()>{
-    let model = bewohner::read_bewohner().context("Something happened while reading the Database!")?;
+    let model = model::read_bewohner().context("Something happened while reading the Database!")?;
 
     let model = match model {
         Some(v) => v,
@@ -62,6 +63,6 @@ fn options(bewohner: &Bewohner) -> Result<()>{
             }
         }
     }
-
+    
     Ok(())
 }
