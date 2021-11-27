@@ -1,10 +1,11 @@
+use anyhow::Result;
 use argon2::{self, Config};
 use chrono::NaiveDate;
 use rand::Rng;
 use std::io;
-use anyhow::Result;
 
-use crate::model::{self, models::Bewohner};
+use crate::db;
+use crate::models::bewohner::Bewohner;
 use crate::view;
 
 fn hash(pwd: &[u8]) -> String {
@@ -18,7 +19,6 @@ fn verify(hash: &str, pwd: &[u8]) -> bool {
 }
 
 pub fn login_user<'a>(bewohner_db: &'a Vec<Bewohner>) -> Result<Option<&'a Bewohner>> {
-
     view::login::login_user();
     let bewohner = check_username(bewohner_db)?;
 
@@ -115,7 +115,7 @@ pub fn erster_bewohner() -> Result<Vec<Bewohner>> {
 
     let bd = NaiveDate::from_ymd(jahr, monat, tag);
 
-    let bewohner = model::create_bewohner(
+    let bewohner = db::create_bewohner(
         name.trim().to_string(),
         nutzername.trim().to_string(),
         passwort.trim().to_string(),

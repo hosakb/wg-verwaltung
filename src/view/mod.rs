@@ -1,63 +1,63 @@
-pub mod login{
+pub mod login {
     pub fn login_user() {
         println!("Willkommen zu Skittles. Der professionellen WG-Verwaltungssoftware, welche es dir leicht macht, deine WG zu verwalten.");
         println!("--Login--");
     }
 
-    pub fn check_username(){
+    pub fn check_username() {
         println!("Bitte Username eingeben! Für abbruch Eingabe drücken!");
         print!("Username: ");
     }
 
-    pub fn username_does_not_exists(){
+    pub fn username_does_not_exists() {
         eprintln!("---Username existiert nicht!---");
     }
 
-    pub fn ask_username(){
+    pub fn ask_username() {
         println!("Nutzername:");
     }
 
-    pub fn ask_password(){
+    pub fn ask_password() {
         print!("Passwort: ");
     }
 
-    pub fn ask_name(){
+    pub fn ask_name() {
         println!("Wie heißt du?");
     }
 
-    pub fn ask_birthday(){
+    pub fn ask_birthday() {
         println!("Geburtstag");
     }
 
-    pub fn login_successfull(){
+    pub fn login_successfull() {
         println!("Login erfolgreich!");
     }
 
-    pub fn wrong_password(){
+    pub fn wrong_password() {
         println!("---Passwort ist falsch!---");
     }
 
-    pub fn welcome(){
+    pub fn welcome() {
         println!("Wilkommen...");
     }
 
-    pub fn day(){
+    pub fn day() {
         println!("Tag");
     }
 
-    pub fn month(){
+    pub fn month() {
         println!("Monat");
     }
 
-    pub fn year(){
+    pub fn year() {
         println!("Jahr");
     }
 }
 
-pub mod menu{
-    use crate::model::models::Bewohner;
+pub mod menu {
+    use crate::models::bewohner::Bewohner;
 
-    pub fn ask_options(bewohner: &Bewohner){
+    pub fn ask_options(bewohner: &Bewohner) {
         println!("Hallo {}, was möchtest du machen?", bewohner.name);
     }
 
@@ -72,22 +72,19 @@ pub mod menu{
         (6) Ausloggen\n
         "
         );
-    
+
         if bewohner.admin {
             println!("---Adminfunktionen---\n(7) Bewohnerverwaltung");
         }
     }
 
-    pub fn option_unavailable(){
+    pub fn option_unavailable() {
         eprint!("---Option nicht verfügbar---");
     }
-
 }
 
-
-
 #[cfg(tests)]
-mod tests{
+mod tests {
 
     use super::*;
 }

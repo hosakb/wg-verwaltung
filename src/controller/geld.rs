@@ -1,4 +1,4 @@
-use crate::model::models::Bewohner;
+use crate::models::bewohner::Bewohner;
 use std::io;
 
 pub struct GeldVerwaltung {

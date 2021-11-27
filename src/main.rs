@@ -1,5 +1,6 @@
 mod controller;
-mod model;
+mod db;
+mod models;
 mod view;
 
 use anyhow::Result;
@@ -8,7 +9,7 @@ use anyhow::Result;
 extern crate diesel;
 extern crate dotenv;
 
-fn main() -> Result<()>{
+fn main() -> Result<()> {
     controller::run()?;
     Ok(())
 }

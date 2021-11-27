@@ -1,26 +1,29 @@
-mod geld;
-mod login;
 mod aufgabe;
 mod einkauf;
+mod geld;
 mod kalender;
+mod login;
 mod putzplan;
 
-use crate::model::{self, models::Bewohner};
+use crate::db;
+use crate::models::bewohner::Bewohner;
+
 use crate::view;
 
+use anyhow::{Context, Result};
 use std::io;
-use anyhow::{Result, Context};
 
-pub fn run() -> Result<()>{
-    let model = model::read_bewohner().context("Something happened while reading the Database!")?;
+pub fn run() -> Result<()> {
+    let model = db::read_bewohner().context("Something happened while reading the Database!")?;
 
     let model = match model {
         Some(v) => v,
-        None => login::erster_bewohner().context("Something happened while creating the first user!")?,
+        None => {
+            login::erster_bewohner().context("Something happened while creating the first user!")?
+        }
     };
 
     let bewohner_option = login::login_user(&model).context("Something happened during login!")?;
-
 
     match bewohner_option {
         Some(b) => options(b)?,
@@ -30,7 +33,7 @@ pub fn run() -> Result<()>{
     Ok(())
 }
 
-fn options(bewohner: &Bewohner) -> Result<()>{
+fn options(bewohner: &Bewohner) -> Result<()> {
     let mut option = String::new();
     let admin = bewohner.admin;
 
@@ -50,7 +53,7 @@ fn options(bewohner: &Bewohner) -> Result<()>{
             // "3" => putzplan::putzplan_options(bewohner),
             "4" => geld::finanzen_options(bewohner),
             // "5" => aufgabe::aufgaben_options(bewohner),
-            "6" => todo!(), 
+            "6" => todo!(),
             _ => {
                 if admin {
                     match o {
@@ -63,6 +66,6 @@ fn options(bewohner: &Bewohner) -> Result<()>{
             }
         }
     }
-    
+
     Ok(())
 }
