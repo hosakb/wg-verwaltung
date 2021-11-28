@@ -2,7 +2,7 @@ pub mod schema;
 
 use std::env;
 
-use anyhow::{Context, Result};
+use anyhow::Result;
 use chrono::NaiveDate;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
@@ -10,78 +10,95 @@ use dotenv::dotenv;
 
 use crate::models::{bewohner::*, geburtstag::Geburtstag};
 
-use schema::bewohner::dsl::*;
-use schema::geburtstag::dsl::*;
+use schema::bewohner::dsl as b_dsl;
+use schema::geburtstag::dsl as g_dsl;
 
 pub fn connect_db() -> PgConnection {
     dotenv().ok();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-    PgConnection::establish(&database_url).expect(&format!("Error connecting to {}", database_url))
+    PgConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {} failed", database_url))
 }
-
-use super::*;
 
 pub fn read_bewohner() -> Result<Vec<Bewohner>> {
     let conn = connect_db();
-    
-    let db_b = bewohner.load::<DbBewohner>(&conn)?;
 
-    let b = db_b.iter().map(|b|{
+    let db_b = b_dsl::bewohner.load::<DbBewohner>(&conn)?;
 
-        let bd = geburtstag.filter(geburtstag.geburtstag_id.eq(b.geburtstag_id)).first::<Geburtstag>(&conn)?;
+    let b_list: Vec<Bewohner> = db_b
+        .iter()
+        .map(|b| {
+            let bd = g_dsl::geburtstag
+                .filter(g_dsl::id.eq(b.geburtstag_id()))
+                .first::<Geburtstag>(&conn)
+                .unwrap_or_else(|_| {
+                    panic!(
+                        "Geburtstag konnte nicht für Bewohner {} gefunden werden!",
+                        b.nutzername()
+                    )
+                });
 
+            Bewohner::new(
+                b.id(),
+                String::from(b.name()),
+                String::from(b.nutzername()),
+                String::from(b.passwort()),
+                b.admin(),
+                bd.datum(),
+            )
+        })
+        .collect();
 
-    }).collect();
-
-    Ok(result)
+    Ok(b_list)
 }
 
-// pub fn create_bewohner(
-//     name: String,
-//     username: String,
-//     passwort: String,
-//     admin: bool,
-//     birthday: NaiveDate,
-// ) -> Result<Bewohner, Error> {
-//     let bdid: i32;
+pub fn create_bewohner(
+    name: String,
+    nutzername: String,
+    passwort: String,
+    admin: bool,
+    birthday: NaiveDate,
+) -> Result<Bewohner> {
+    let conn = connect_db();
 
-//     let q_bd = "SELECT id FROM bd WHERE datum = $1;";
-//     let row = query_single(q_bd, &[&birthday])?;
+    let g: Geburtstag = diesel::insert_into(g_dsl::geburtstag)
+        .values(g_dsl::datum.eq(&birthday))
+        .get_result(&conn)?;
 
-//     if row.is_none() {
-//         let q = "INSERT INTO bd(datum) VALUES ($1);";
-//         let query = query_single(q, &[])?;
+    let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
+        .values((
+            b_dsl::name.eq(&name),
+            b_dsl::nutzername.eq(&nutzername),
+            b_dsl::passwort.eq(&passwort),
+            b_dsl::admin.eq(admin),
+            b_dsl::geburtstag_id.eq(g.id()),
+        ))
+        .get_result(&conn)?;
 
-//         if query.is_none() {
-//             panic!("Unexpected None Value");
-//         }
+    Ok(Bewohner::new(
+        b.id(),
+        String::from(b.name()),
+        String::from(b.nutzername()),
+        String::from(b.passwort()),
+        b.admin(),
+        g.datum(),
+    ))
+}
 
-//         bdid = query.unwrap().get(0);
-//     } else {
-//         bdid = row.unwrap().get(0);
-//     }
+pub fn username_exists(nutzername: String) -> Result<bool> {
+    let conn = connect_db();
 
-//     let q = "INSERT INTO bewohner(name, nutzername, passwort, admin, bdid) VALUES ($1, $2, $3, $4, $5) RETURNING bewohner.id;";
-//     let bewohner_id = query_single(q, &[&name, &username, &passwort, &admin, &bdid])?;
+    let b = b_dsl::bewohner
+        .filter(b_dsl::nutzername.eq(nutzername))
+        .get_results::<DbBewohner>(&conn)?;
 
-//     if bewohner_id.is_none() {
-//         panic!("Unexpected None Value");
-//     }
+    if b.is_empty() {
+        return Ok(false);
+    }
 
-//     let bewohner = get_bewohner_by_id(bewohner_id.unwrap().get(0))?.unwrap(); // Besseres handeling
-
-//     Ok(bewohner)
-// }
-
-// pub fn username_exists(username: String) -> Result<bool, Error> {
-//     let q = "SELECT * FROM bewohner WHERE nutzername = $1";
-//     if query_single(q, &[&username])?.is_none() {
-//         return Ok(false);
-//     }
-
-//     Ok(true)
-// }
+    Ok(true)
+}
 
 pub fn user_update_bewohner() {}
 
@@ -92,10 +109,29 @@ mod test {
 
     use super::*;
 
-    // #[test]
-    // fn test_read_bewohner() {
-    //     let bewohner = entity::read_bewohner().unwrap();
+    fn setup() {
+        let conn = connect_db();
 
-    //     assert!(bewohner.is_some());
-    // }
+        let d = NaiveDate::from_ymd(1998, 2, 10);
+        let g: Geburtstag = diesel::insert_into(g_dsl::geburtstag)
+            .values(g_dsl::datum.eq(d))
+            .get_result(&conn)
+            .unwrap();
+        let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
+            .values((
+                b_dsl::name.eq("Ben"),
+                b_dsl::nutzername.eq("hosakb"),
+                b_dsl::passwort.eq("1234"),
+                b_dsl::admin.eq(true),
+                b_dsl::geburtstag_id.eq(g.id()),
+            ))
+            .get_result(&conn)
+            .unwrap();
+    }
+
+    #[test]
+    fn test_read_bewohner() {
+        setup();
+        assert!(read_bewohner().unwrap().is_empty());
+    }
 }

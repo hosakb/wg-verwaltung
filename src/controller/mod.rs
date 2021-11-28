@@ -14,12 +14,13 @@ use anyhow::{Context, Result};
 use std::io;
 
 pub fn run() -> Result<()> {
-    let model = db::read_bewohner().context("Something happened while reading the Database!")?;
+    let model = db::read_bewohner().context("Something happened while reading the Database!");
 
     let model = match model {
-        Some(v) => v,
-        None => {
-            login::erster_bewohner().context("Something happened while creating the first user!")?
+        Ok(v) => v,
+        Err(_) => {
+            vec![login::erster_bewohner()
+                .context("Something happened while creating the first user!")?]
         }
     };
 
@@ -35,7 +36,7 @@ pub fn run() -> Result<()> {
 
 fn options(bewohner: &Bewohner) -> Result<()> {
     let mut option = String::new();
-    let admin = bewohner.admin;
+    let admin = bewohner.admin();
 
     view::menu::ask_options(bewohner);
 

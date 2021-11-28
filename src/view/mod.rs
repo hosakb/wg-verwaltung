@@ -58,7 +58,7 @@ pub mod menu {
     use crate::models::bewohner::Bewohner;
 
     pub fn ask_options(bewohner: &Bewohner) {
-        println!("Hallo {}, was möchtest du machen?", bewohner.name);
+        println!("Hallo {}, was möchtest du machen?", bewohner.name());
     }
 
     pub fn print_options(bewohner: &Bewohner) {
@@ -73,7 +73,7 @@ pub mod menu {
         "
         );
 
-        if bewohner.admin {
+        if bewohner.admin() {
             println!("---Adminfunktionen---\n(7) Bewohnerverwaltung");
         }
     }
