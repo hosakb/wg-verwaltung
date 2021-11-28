@@ -1,0 +1,31 @@
+1. Docker Desktop runterladen (WSL 2 benötigt)
+
+in Terminal folgendes ausführen:
+
+docker run -p 5432:5432 -d \
+-e POSTGRES_PASSWORD=postgres \
+-e POSTGRES_USER=postgres \
+-e POSTGRES_DB=wg \
+-v pgdata:/var/lib/postgresql/data \
+postgres
+
+2. Postgresql 13.5.1 oder so (nicht 14) runterladen und installieren
+Passwort: postgres
+Port: 5432
+
+3. in powershell setx PQ_LIB_DIR "C:\Program Files\PostgreSQL\13\lib" ausführen
+
+4. Neu starten
+
+5. docker starten (Auf play in Anwendung drücken)
+
+5. diesel migration run in vs code starten
+
+6. Test in db/mod starten
+
+
+
+
+http://diesel.rs/guides/getting-started
+
+https://stackoverflow.com/questions/62708607/how-to-fix-rust-diesel-cli-link-libpq-lib-error-on-install

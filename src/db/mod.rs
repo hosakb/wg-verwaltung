@@ -132,6 +132,6 @@ mod test {
     #[test]
     fn test_read_bewohner() {
         setup();
-        assert!(read_bewohner().unwrap().is_empty());
+        assert!(!read_bewohner().unwrap().is_empty());
     }
 }
