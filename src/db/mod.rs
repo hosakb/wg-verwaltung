@@ -62,9 +62,16 @@ pub fn create_bewohner(
 ) -> Result<Bewohner> {
     let conn = connect_db();
 
-    let g: Geburtstag = diesel::insert_into(g_dsl::geburtstag)
+    let g = g_dsl::geburtstag
+    .filter(g_dsl::datum.eq(birthday))
+    .first::<Geburtstag>(&conn);
+
+    let g = match g{
+        Ok(g) => g,
+        Err(_) => diesel::insert_into(g_dsl::geburtstag)
         .values(g_dsl::datum.eq(&birthday))
-        .get_result(&conn)?;
+        .get_result(&conn)?
+    };
 
     let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
         .values((
