@@ -53,6 +53,19 @@ pub fn read_bewohner() -> Result<Vec<Bewohner>> {
     Ok(b_list)
 }
 
+fn insert_into_bewohner_returning(name: &str, nutzername:  &str, passwort:  &str, admin: &bool, g: &Geburtstag, conn: &PgConnection) -> Result<DbBewohner, anyhow::Error> {
+    let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
+        .values((
+            b_dsl::name.eq(name),
+            b_dsl::nutzername.eq(&nutzername),
+            b_dsl::passwort.eq(&passwort),
+            b_dsl::admin.eq(admin),
+            b_dsl::geburtstag_id.eq(g.id()),
+        ))
+        .get_result(conn)?;
+    Ok(b)
+}
+
 pub fn create_bewohner(
     name: String,
     nutzername: String,
@@ -62,26 +75,14 @@ pub fn create_bewohner(
 ) -> Result<Bewohner> {
     let conn = connect_db();
 
-    let g = g_dsl::geburtstag
-    .filter(g_dsl::datum.eq(birthday))
-    .first::<Geburtstag>(&conn);
-
-    let g = match g{
+    let g = match check_existing_bd(birthday, &conn){
         Ok(g) => g,
         Err(_) => diesel::insert_into(g_dsl::geburtstag)
         .values(g_dsl::datum.eq(&birthday))
         .get_result(&conn)?
     };
 
-    let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
-        .values((
-            b_dsl::name.eq(&name),
-            b_dsl::nutzername.eq(&nutzername),
-            b_dsl::passwort.eq(&passwort),
-            b_dsl::admin.eq(admin),
-            b_dsl::geburtstag_id.eq(g.id()),
-        ))
-        .get_result(&conn)?;
+    let b = insert_into_bewohner_returning(&name, &nutzername, &passwort, &admin, &g, &conn)?;
 
     Ok(Bewohner::new(
         b.id(),
@@ -91,6 +92,13 @@ pub fn create_bewohner(
         b.admin(),
         g.datum(),
     ))
+}
+
+fn check_existing_bd(birthday: NaiveDate, conn: &PgConnection) -> Result<Geburtstag> {
+    let g = g_dsl::geburtstag
+    .filter(g_dsl::datum.eq(birthday))
+    .first::<Geburtstag>(conn)?;
+    Ok(g)
 }
 
 pub fn username_exists(nutzername: String) -> Result<bool> {
@@ -107,10 +115,6 @@ pub fn username_exists(nutzername: String) -> Result<bool> {
     Ok(true)
 }
 
-pub fn user_update_bewohner() {}
-
-pub fn admin_update_bewohner() {}
-
 #[cfg(test)]
 mod test {
 
@@ -124,7 +128,7 @@ mod test {
             .values(g_dsl::datum.eq(d))
             .get_result(&conn)
             .unwrap();
-        let b: DbBewohner = diesel::insert_into(b_dsl::bewohner)
+        let _: DbBewohner = diesel::insert_into(b_dsl::bewohner)
             .values((
                 b_dsl::name.eq("Ben"),
                 b_dsl::nutzername.eq("hosakb"),
@@ -139,6 +143,14 @@ mod test {
     #[test]
     fn test_read_bewohner() {
         setup();
+        assert!(!read_bewohner().unwrap().is_empty());
+    }
+
+    #[test]
+    fn test_create_bewohner() {
+        let d = NaiveDate::from_ymd(1998, 2, 10);
+        let b = create_bewohner(String::from("Ben"), String::from("hosakb"), String::from("1234"), true, d);
+        assert!(b.is_ok());
         assert!(!read_bewohner().unwrap().is_empty());
     }
 }
